@@ -70,7 +70,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
   const handleLogingWithGoogle = useCallback(
     async (cred: CredentialResponse) => {
       const googleToken = cred.credential;
-      console.log(googleToken);
+      
 
       if (!googleToken) return toast.error("Google token not found");
 
