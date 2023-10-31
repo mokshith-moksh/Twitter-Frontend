@@ -1,7 +1,7 @@
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import React, { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
-import { BiHash, BiHomeCircle, BiUser } from "react-icons/bi";
+import { BiHash, BiHomeCircle, BiLogOut, BiUser } from "react-icons/bi";
 import { BsBell, BsBookmark, BsEnvelope, BsTwitter } from "react-icons/bs";
 import { SlOptions } from "react-icons/sl";
 import Image from "next/image";
@@ -9,8 +9,7 @@ import { useCurrentUser } from "@/hooks/user";
 import { graphqlClient } from "@/clients/api";
 import { verifyGoogleTokenQuery } from "@/graphql/query/user";
 import { useQueryClient } from "@tanstack/react-query";
-import Link from 'next/link'
-
+import Link from "next/link";
 
 interface TwitterlayoutProps {
   children: React.ReactNode;
@@ -19,58 +18,56 @@ interface TwitterlayoutProps {
 interface TwitterSidebarButon {
   title: string;
   icons: React.ReactNode;
-  path:string
+  path: string;
 }
 
 const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
   const { user } = useCurrentUser();
-  const SideBarMenuItems: TwitterSidebarButon[] = useMemo(()=>{
-   return (
-    [
+
+  const SideBarMenuItems: TwitterSidebarButon[] = useMemo(() => {
+    return [
       {
         title: "Home",
         icons: <BiHomeCircle />,
-        path:'/'
+        path: "/",
       },
       {
         title: "Explore",
         icons: <BiHash />,
-        path:'/'
+        path: "/",
       },
       {
         title: "Notifications",
         icons: <BsBell />,
-        path:'/'
+        path: "/",
       },
       {
         title: "Messages",
         icons: <BsEnvelope />,
-        path:'/'
+        path: "/",
       },
       {
         title: "Bookmarks",
         icons: <BsBookmark />,
-        path:'/'
+        path: "/",
       },
       {
         title: "Profile",
         icons: <BiUser />,
-        path:`/${user?.id}`
+        path: `/${user?.id}`,
       },
       {
         title: "More",
         icons: <SlOptions />,
-        path:'/'
+        path: "/",
       },
-    ]
-   )
-  },[user?.id]);
-  
+    ];
+  }, [user?.id]);
+
   const queryClient = useQueryClient();
   const handleLogingWithGoogle = useCallback(
     async (cred: CredentialResponse) => {
       const googleToken = cred.credential;
-      
 
       if (!googleToken) return toast.error("Google token not found");
 
@@ -91,6 +88,14 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
     [queryClient]
   );
 
+  const handleLogout = useCallback(() => {
+    // Remove the Twitter token from local storage.
+    window.localStorage.removeItem("__Twitter_token");
+  
+    // Reload the page.
+    location.reload();
+  }, []);
+
   return (
     <div>
       <div className="grid grid-cols-12 h-fit w-fit sm:px-[9vw]  ">
@@ -102,49 +107,51 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
             </div>
             <ul>
               {SideBarMenuItems.map((item) => (
-                <li
-                  key={item.title}
-                 
-                >
-                  <Link href={item.path} className="flex justify-start items-center gap-4 mt-5 hover:bg-gray-800 rounded-full px-5 py-2 cursor-pointer w-fit">
-                  <span>{item.icons}</span>
-                  <span className="hidden sm:block">{item.title}</span></Link>
+                <li key={item.title}>
+                  <Link
+                    href={item.path}
+                    className="flex justify-start items-center gap-4 mt-5 hover:bg-gray-800 rounded-full px-5 py-2 cursor-pointer w-fit"
+                  >
+                    <span>{item.icons}</span>
+                    <span className="hidden sm:block">{item.title}</span>
+                  </Link>
                 </li>
               ))}
             </ul>
+           {  window.localStorage.getItem("__Twitter_token") &&  <div className="flex gap-4 cursor-pointer justify-center items-center mt-2  hover:bg-gray-800 rounded-full px-5 py-2" onClick={handleLogout}>
+              <div><BiLogOut/></div>  
+              <div>Logout</div>
+            </div>}
             <div className="px-3 mt-5">
               <button className="hidden sm:inline bg-[#1d9bf0] font-semibold py-2 text-lg px-3 rounded-full w-full mt-4">
                 Tweet
               </button>
               {user && (
-              <div className="grid grid-cols-2 fixed bottom-[1vh] w-40">
-                <div>
-                  {user?.profileImageUrl && (
-                    <Image
-                      src={user?.profileImageUrl}
-                      width={50}
-                      height={50}
-                      alt="Picture of the author"
-                      className="rounded-full "
-                    />
-                  )}
+                <div className="grid grid-cols-2 fixed bottom-[1vh] w-40">
+                  <div>
+                    {user?.profileImageUrl && (
+                      <Image
+                        src={user?.profileImageUrl}
+                        width={50}
+                        height={50}
+                        alt="Picture of the author"
+                        className="rounded-full "
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <h1 className="hidden sm:block">{user.firstName}</h1>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="hidden sm:block">{user.firstName}</h1>
-                </div>
-              </div>
-            )}
+              )}
             </div>
-            
           </div>
         </div>
 
-        {/* Main Menu */}  
+        {/* Main Menu */}
         <div className="col-span-10 sm:col-span-5 border-r-[0.5px] border-l-[0.5px] border-gray-600 overflow-scroll h-screen scrollbar-hide ">
-      
           {props.children}
-      
-        </div>    
+        </div>
 
         {/* Info Menu */}
         <div className="col-span-0 sm:col-span-3 p-5">
@@ -160,11 +167,11 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                 }}
               />
             </div>
-          ):(
-            <div className="px-4 py-3 bg-slate-800 rounded-lg">{
-              user?.recommendedUsers?.map((el)=>(
+          ) : (
+            <div className="px-4 py-3 bg-slate-800 rounded-lg">
+              {user?.recommendedUsers?.map((el) => (
                 <div className="flex items-center gap-3 mt-2" key={el?.id}>
-                   {el?.profileImageUrl && (
+                  {el?.profileImageUrl && (
                     <Image
                       src={el?.profileImageUrl}
                       alt="user-image"
@@ -185,8 +192,9 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                     </Link>
                   </div>
                 </div>
-              ))
-          }</div> )}
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

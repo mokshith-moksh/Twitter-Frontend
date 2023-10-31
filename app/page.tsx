@@ -60,6 +60,7 @@ export default function Home() {
   }, [handleInputChangeFile]);
 
   const handleTweetSubmit = useCallback(() => {
+    if(!window.localStorage.getItem("__Twitter_token")){return toast.error("login to tweet")} 
     if (!content) return toast.error("Please enter the tweet");
     mutate({
       content,
@@ -74,7 +75,7 @@ export default function Home() {
       <div className="border-t-[0.5px] border-gray-600  hover:bg-gray-950 cursor-pointer transition-all p-2  ">
         <div className="grid grid-cols-12  border-gray-600 gap-3">
           <div className=" col-span-1">
-            {user?.profileImageUrl && (
+            {user?.profileImageUrl && window.localStorage.getItem("__Twitter_token") && (
               <Image
                 src={user?.profileImageUrl}
                 alt="User-image"
@@ -85,6 +86,8 @@ export default function Home() {
             )}
           </div>
           <div className=" col-span-11">
+          { window.localStorage.getItem("__Twitter_token") &&   <div>
+
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -109,6 +112,7 @@ export default function Home() {
                 Tweet
               </button>
             </div>
+            </div>}
           </div>
         </div>
       </div>
