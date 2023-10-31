@@ -2,8 +2,7 @@
 import { graphqlClient } from "@/clients/api";
 import { UnfollowUserMuatation, followUserMuatation } from "@/graphql/mutation/user";
 import { useCurrentUser } from "@/hooks/user";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { userInfo } from "os";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useMemo } from "react";
 
 interface FollowCardProps {

@@ -1,17 +1,15 @@
 "use client";
 import React, { use, useCallback, useState } from "react";
 import { BiImageAlt } from "react-icons/bi";
-import FeedCard  from "@/components/FeedCard";
+import FeedCard from "@/components/FeedCard";
 import { useCurrentUser } from "../hooks/user";
 import Image from "next/image";
 import { useCreateTweets, useGetAllTweets } from "@/hooks/tweet";
-import { Tweet } from "@/gql/graphql";
+import { Tweet, User } from "@/gql/graphql";
 import { graphqlClient } from "@/clients/api";
 import { getSignedURLForTweetQuery } from "@/graphql/query/tweet";
 import axios from "axios";
 import toast from "react-hot-toast";
-
-
 
 export default function Home() {
   const { user } = useCurrentUser();
@@ -20,55 +18,56 @@ export default function Home() {
   const { tweets = [] } = useGetAllTweets();
   const { mutate } = useCreateTweets();
 
-  const handleInputChangeFile = useCallback((input: HTMLInputElement)=>{
-    return async (event:Event)=>{
+  const handleInputChangeFile = useCallback((input: HTMLInputElement) => {
+    return async (event: Event) => {
       event.preventDefault();
       const file: File | undefined | null = input.files?.item(0);
-      console.log(file);
+      if (!file) return;
 
-      if(!file) return;
-      
-      const {getSignedURLForTweet} = await graphqlClient.request(getSignedURLForTweetQuery,{
-        imageName: file.name,
-        imageType: file.type
-      })
+      const { getSignedURLForTweet } = await graphqlClient.request(
+        getSignedURLForTweetQuery,
+        {
+          imageName: file.name,
+          imageType: file.type,
+        }
+      );
 
-      if(getSignedURLForTweet){
-        toast.loading("Uploading...",{id:"2"})
-         await axios.put(getSignedURLForTweet,file,{
-          headers:{
-            "Content-Type":file.type
-          }
-         })
-         toast.success("Uploaded completed",{id:"2"})
-         const url = new URL(getSignedURLForTweet);
-         const myFilePath = `${url.origin}${url.pathname}`
-         setImageUrl(myFilePath);
+      if (getSignedURLForTweet) {
+        toast.loading("Uploading...", { id: "2" });
+        await axios.put(getSignedURLForTweet, file, {
+          headers: {
+            "Content-Type": file.type,
+          },
+        });
+        toast.success("Uploaded completed", { id: "2" });
+        const url = new URL(getSignedURLForTweet);
+        const myFilePath = `${url.origin}${url.pathname}`;
+        setImageUrl(myFilePath);
       }
     };
-  },[])
+  }, []);
 
   const handleSelectImage = useCallback(() => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
 
- const handlerFn = handleInputChangeFile(input);
+    const handlerFn = handleInputChangeFile(input);
 
-   input.addEventListener("change", handlerFn);
+    input.addEventListener("change", handlerFn);
 
     input.click();
   }, [handleInputChangeFile]);
 
   const handleTweetSubmit = useCallback(() => {
-    if(!content) return toast.error("Please enter the tweet");
+    if (!content) return toast.error("Please enter the tweet");
     mutate({
       content,
       imageUrl: ImageUrl,
     }),
       setContent("");
-      setImageUrl("")
-  }, [content,mutate,ImageUrl]);
+    setImageUrl("");
+  }, [content, mutate, ImageUrl]);
 
   return (
     <div>
@@ -93,9 +92,14 @@ export default function Home() {
               rows={3}
               placeholder="What's happening?!"
             ></textarea>
-            {
-              ImageUrl && (<Image src={`${ImageUrl}`} alt="teweet-image" width={300} height={300}/>)
-            }
+            {ImageUrl && (
+              <Image
+                src={`${ImageUrl}`}
+                alt="teweet-image"
+                width={300}
+                height={300}
+              />
+            )}
             <div className="flex justify-between mt-2 items-center">
               <BiImageAlt onClick={handleSelectImage} className="text-xl" />
               <button
@@ -113,7 +117,7 @@ export default function Home() {
         ?.slice(0)
         .reverse()
         .map((tweet) => (
-          <FeedCard data={tweet as Tweet} key={tweet?.id} />
+          <FeedCard dataTweet={tweet as Tweet} key={tweet?.id} dataUser={user as User} />
         ))}
     </div>
   );

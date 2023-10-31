@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
       <div>
         {userInfo.getUserById?.tweets?.map((tweet) => (
-          <FeedCard key={tweet?.id} data={tweet as Tweet}></FeedCard>
+          <FeedCard key={tweet?.id} dataTweet={tweet as Tweet} ></FeedCard>
         ))}
       </div>
     </div>

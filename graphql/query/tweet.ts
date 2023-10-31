@@ -8,6 +8,10 @@ query GetAllTweets{
     id
     content
     imageUrl
+    likes{
+      id
+      firstName
+    }
     auther {
       id
       firstName

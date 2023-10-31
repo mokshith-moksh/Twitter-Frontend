@@ -34,6 +34,9 @@ export const getCurrentUserQuery = graphql(`
         lastName
         profileImageUrl
       }
+      likedTweets{
+        id
+      }
       tweets {
         content
         id
