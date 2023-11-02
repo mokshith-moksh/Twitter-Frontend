@@ -1,3 +1,4 @@
+"use client"
 import Image from 'next/image'
 import { BiMessage, BiUpload } from "react-icons/bi";
 import { FaRetweet } from "react-icons/fa";
@@ -16,7 +17,7 @@ import {
 } from "@/graphql/mutation/tweet";
 import { useMemo } from 'react';
 import { useCallback } from 'react';
-import { useGetAllTweets } from '@/hooks/tweet';
+
 
 interface FeedCardProps {
   dataTweet: Tweet;
@@ -56,7 +57,7 @@ export default function FeedCard ({ dataTweet,dataUser }: FeedCardProps) {
  
  
   return (
-    <div className="border-t-[0.5px] border-gray-600  hover:bg-gray-950 cursor-pointer transition-all p-2 ">
+    <div className="border-t-[0.5px] border-[#eff3f4] dark:border-[#2f3336] hover:bg-[#f7f9f9] dark:hover:bg-gray-950  cursor-pointer transition-all p-2 ">
       <div className="grid grid-cols-12  border-gray-600 gap-3">
         <div className=" col-span-1">
           {dataTweet.auther?.profileImageUrl && (
@@ -65,14 +66,14 @@ export default function FeedCard ({ dataTweet,dataUser }: FeedCardProps) {
               alt="User-image"
               width={50}
               height={50}
-              className="rounded-2xl"
+              className="rounded-full hover:brightness-[80%]"
             />
           )}
         </div>
-        <div className=" col-span-11">
+        <div className=" col-span-11 font-lg">
           {dataTweet.auther?.id && (
             <Link href={`${dataTweet.auther?.id}`}>
-              {dataTweet.auther?.firstName} {dataTweet.auther?.lastName}
+             <span className="font-extrabold">{dataTweet.auther?.firstName} {dataTweet.auther?.lastName} </span> 
             </Link>
           )}
           <p>{dataTweet.content}</p>
@@ -82,6 +83,7 @@ export default function FeedCard ({ dataTweet,dataUser }: FeedCardProps) {
               alt="tweet-image"
               width={500}
               height={500}
+              className="rounded-2xl"
             />
           )}
           <div className="flex justify-between mt-5 text-2xl items-center p-2 w-[90%] text-gray-500">

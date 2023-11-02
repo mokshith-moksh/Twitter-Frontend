@@ -88,3 +88,26 @@ export const getUserByIdQuery = graphql(`
     }
   }
 `);
+
+export const getAllUserQuery = graphql(`
+  #graphql
+  query GetAllUser {
+  getAllUser {
+    firstName
+    id
+    profileImageUrl
+  }
+}
+`);
+
+export const getSearchUserQuery = graphql(`
+  #graphql
+  query GetSearchUser($searchQuery: String!) {
+  getSearchUser(searchQuery: $searchQuery) {
+    id
+    firstName
+    lastName
+    profileImageUrl
+  }
+}
+`);

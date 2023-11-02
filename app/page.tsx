@@ -10,6 +10,8 @@ import { graphqlClient } from "@/clients/api";
 import { getSignedURLForTweetQuery } from "@/graphql/query/tweet";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Textarea } from "@/components/ui/textarea"
+
 
 export default function Home() {
   const { user } = useCurrentUser();
@@ -60,7 +62,7 @@ export default function Home() {
   }, [handleInputChangeFile]);
 
   const handleTweetSubmit = useCallback(() => {
-    if(!window.localStorage.getItem("__Twitter_token")){return toast.error("login to tweet")} 
+    if(!user){return toast.error("login to tweet")} 
     if (!content) return toast.error("Please enter the tweet");
     mutate({
       content,
@@ -68,33 +70,33 @@ export default function Home() {
     }),
       setContent("");
     setImageUrl("");
-  }, [content, mutate, ImageUrl]);
+  }, [user, content, mutate, ImageUrl]);
 
   return (
     <div>
-      <div className="border-t-[0.5px] border-gray-600  hover:bg-gray-950 cursor-pointer transition-all p-2  ">
+      <div className="border-t-[0.5px] border-gray-600  cursor-pointer transition-all p-2  ">
         <div className="grid grid-cols-12  border-gray-600 gap-3">
           <div className=" col-span-1">
-            {user?.profileImageUrl && window.localStorage.getItem("__Twitter_token") && (
+            {user?.profileImageUrl && (
               <Image
                 src={user?.profileImageUrl}
                 alt="User-image"
                 width={50}
                 height={50}
-                className="rounded-2xl"
+                className="rounded-full"
               />
             )}
           </div>
           <div className=" col-span-11">
-          { window.localStorage.getItem("__Twitter_token") &&   <div>
+          { user &&   <div>
 
-            <textarea
+            <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="border-b-2 w-full bg-transparent text-xl px-3 border-b-slate-700 "
               rows={3}
               placeholder="What's happening?!"
-            ></textarea>
+            />
             {ImageUrl && (
               <Image
                 src={`${ImageUrl}`}

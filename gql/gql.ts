@@ -23,6 +23,8 @@ const documents = {
     "\n  #graphql\n  query VerifyUserGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n": types.VerifyUserGoogleTokenDocument,
     "\n  #graphql\n  query GetCurrentUser {\n    getCurrentUser {\n      id\n      profileImageUrl\n      email\n      firstName\n      lastName\n      recommendedUsers {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      followers {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      likedTweets{\n        id\n      }\n      tweets {\n        content\n        id\n        imageUrl\n        auther {\n          id\n          firstName\n          lastName\n          profileImageUrl\n        }\n      }\n    }\n  }\n": types.GetCurrentUserDocument,
     "\n  #graphql\n  query GetUserById($id: ID!) {\n    getUserById(id: $id) {\n      id\n      email\n      firstName\n      lastName\n      profileImageUrl\n\n      followers {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      tweets {\n        content\n        id\n        imageUrl\n        auther {\n          id\n          firstName\n          lastName\n          profileImageUrl\n        }\n      }\n    }\n  }\n": types.GetUserByIdDocument,
+    "\n  #graphql\n  query GetAllUser {\n  getAllUser {\n    firstName\n    id\n    profileImageUrl\n  }\n}\n": types.GetAllUserDocument,
+    "\n  #graphql\n  query GetSearchUser($searchQuery: String!) {\n  getSearchUser(searchQuery: $searchQuery) {\n    id\n    firstName\n    lastName\n    profileImageUrl\n  }\n}\n": types.GetSearchUserDocument,
 };
 
 /**
@@ -79,6 +81,14 @@ export function graphql(source: "\n  #graphql\n  query GetCurrentUser {\n    get
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  #graphql\n  query GetUserById($id: ID!) {\n    getUserById(id: $id) {\n      id\n      email\n      firstName\n      lastName\n      profileImageUrl\n\n      followers {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      tweets {\n        content\n        id\n        imageUrl\n        auther {\n          id\n          firstName\n          lastName\n          profileImageUrl\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  #graphql\n  query GetUserById($id: ID!) {\n    getUserById(id: $id) {\n      id\n      email\n      firstName\n      lastName\n      profileImageUrl\n\n      followers {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImageUrl\n      }\n      tweets {\n        content\n        id\n        imageUrl\n        auther {\n          id\n          firstName\n          lastName\n          profileImageUrl\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  #graphql\n  query GetAllUser {\n  getAllUser {\n    firstName\n    id\n    profileImageUrl\n  }\n}\n"): (typeof documents)["\n  #graphql\n  query GetAllUser {\n  getAllUser {\n    firstName\n    id\n    profileImageUrl\n  }\n}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  #graphql\n  query GetSearchUser($searchQuery: String!) {\n  getSearchUser(searchQuery: $searchQuery) {\n    id\n    firstName\n    lastName\n    profileImageUrl\n  }\n}\n"): (typeof documents)["\n  #graphql\n  query GetSearchUser($searchQuery: String!) {\n  getSearchUser(searchQuery: $searchQuery) {\n    id\n    firstName\n    lastName\n    profileImageUrl\n  }\n}\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

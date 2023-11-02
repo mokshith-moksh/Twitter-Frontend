@@ -10,6 +10,9 @@ import { graphqlClient } from "@/clients/api";
 import { verifyGoogleTokenQuery } from "@/graphql/query/user";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { DropdownMenuCheckboxes } from "../DropdownMenuCheckboxes";
+import { Button } from "../ui/button";
+import { ModeToggle } from "../ModeToggle";
 
 interface TwitterlayoutProps {
   children: React.ReactNode;
@@ -34,7 +37,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
       {
         title: "Explore",
         icons: <BiHash />,
-        path: "/",
+        path: "/search",
       },
       {
         title: "Notifications",
@@ -56,11 +59,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
         icons: <BiUser />,
         path: `/${user?.id}`,
       },
-      {
-        title: "More",
-        icons: <SlOptions />,
-        path: "/",
-      },
+
     ];
   }, [user?.id]);
 
@@ -88,21 +87,13 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
     [queryClient]
   );
 
-  const handleLogout = useCallback(() => {
-    // Remove the Twitter token from local storage.
-    window.localStorage.removeItem("__Twitter_token");
-  
-    // Reload the page.
-    location.reload();
-  }, []);
-
   return (
     <div>
       <div className="grid grid-cols-12 h-fit w-fit sm:px-[9vw]  ">
         {/* Icons Menu */}
         <div className="col-span-2 sm:col-span-3 pt-1 flex sm:justify-end pr-4 ">
           <div className="mt-6 text-2xl font-bold pr-6 ">
-            <div className="text-3xl hover:bg-gray-800 rounded-full p-4 h-fit w-fit cursor-pointer transition-all">
+            <div className="text-3xl hover:bg-[#cbced1] dark:hover:bg-[#2e291f] rounded-full p-4 h-fit w-fit cursor-pointer transition-all">
               <BsTwitter />
             </div>
             <ul>
@@ -110,7 +101,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                 <li key={item.title}>
                   <Link
                     href={item.path}
-                    className="flex justify-start items-center gap-4 mt-5 hover:bg-gray-800 rounded-full px-5 py-2 cursor-pointer w-fit"
+                    className="flex justify-start items-center gap-4 mt-5 hover:bg-[#cbced1]  dark:hover:bg-[#2e291f] rounded-full px-5 py-2 cursor-pointer w-fit"
                   >
                     <span>{item.icons}</span>
                     <span className="hidden sm:block">{item.title}</span>
@@ -118,16 +109,15 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                 </li>
               ))}
             </ul>
-           {  window.localStorage.getItem("__Twitter_token") &&  <div className="flex gap-4 cursor-pointer justify-center items-center mt-2  hover:bg-gray-800 rounded-full px-5 py-2" onClick={handleLogout}>
-              <div><BiLogOut/></div>  
-              <div>Logout</div>
-            </div>}
+            {user && (
+               <DropdownMenuCheckboxes  />
+            )}
             <div className="px-3 mt-5">
-              <button className="hidden sm:inline bg-[#1d9bf0] font-semibold py-2 text-lg px-3 rounded-full w-full mt-4">
+              <button className="hidden sm:inline bg-[#1d9bf0]  font-semibold py-2 text-lg px-3 rounded-full w-full mt-4">
                 Tweet
               </button>
               {user && (
-                <div className="grid grid-cols-2 fixed bottom-[1vh] w-40">
+                <div className="flex fixed bottom-[1vh] w-full gap-5">
                   <div>
                     {user?.profileImageUrl && (
                       <Image
@@ -139,9 +129,12 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                       />
                     )}
                   </div>
-                  <div>
-                    <h1 className="hidden sm:block">{user.firstName}</h1>
+                  <div className="flex flex-col" >
+                    <h1 className="hidden sm:block">{user.firstName}</h1>  
+                    <div className="text-lg font-light text-[#536471]">@{user.firstName}</div>
                   </div>
+                
+                  <div><ModeToggle/></div>
                 </div>
               )}
             </div>
@@ -149,7 +142,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
         </div>
 
         {/* Main Menu */}
-        <div className="col-span-10 sm:col-span-5 border-r-[0.5px] border-l-[0.5px] border-gray-600 overflow-scroll h-screen scrollbar-hide ">
+        <div className="col-span-10 sm:col-span-5 border-r-[0.5px] border-l-[0.5px] border-[#eff3f4] dark:border-[#2f3336] overflow-scroll h-screen scrollbar-hide ">
           {props.children}
         </div>
 
@@ -165,12 +158,13 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                 onError={() => {
                   toast.error("Login failed");
                 }}
+                
               />
             </div>
           ) : (
-            <div className="px-4 py-3 bg-slate-800 rounded-lg">
+            <div className="px-4 py-3 dark:bg-slate-800 bg-[#f7f9f9 rounded-lg cursor-pointer w-[120%]">
               {user?.recommendedUsers?.map((el) => (
-                <div className="flex items-center gap-3 mt-2" key={el?.id}>
+                <div className="flex items-center  mt-2 " key={el?.id}>
                   {el?.profileImageUrl && (
                     <Image
                       src={el?.profileImageUrl}
@@ -180,15 +174,19 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                       height={60}
                     />
                   )}
-                  <div>
-                    <div className="text-lg">
-                      {el?.firstName} {el?.lastName}
+                  <div className="flex gap-2 ml-4">
+                    <div >
+                      <span className="text-lg font-extrabold">{el?.firstName} {el?.lastName}</span>
+                      <span className="text-[#536471]">@{el?.firstName}</span>
                     </div>
                     <Link
                       href={`/${el?.id}`}
-                      className="bg-white text-black text-sm px-5 py-1 w-full rounded-lg"
+                     
                     >
-                      View
+                      <Button  className="rounded-2xl">
+                         View
+                      </Button>
+                     
                     </Link>
                   </div>
                 </div>
