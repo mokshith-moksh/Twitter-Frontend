@@ -39,8 +39,8 @@ const SearchComponent = async ({
   }
 
   return (
-    <div className="flex justify-center relative ">
-      <div className="w-[80%] flex flex-col">
+    <div className="flex flex-col justify-center items-center relative ">
+      <div className="w-[80%] flex flex-col ml-5">
         <SearchBar />
       </div>
       <div>

@@ -31,16 +31,18 @@ export default function Home() {
         {
           imageName: file.name,
           imageType: file.type,
+        
         }
       );
 
       if (getSignedURLForTweet) {
         toast.loading("Uploading...", { id: "2" });
-        await axios.put(getSignedURLForTweet, file, {
+      await axios.put(getSignedURLForTweet, file, {
           headers: {
             "Content-Type": file.type,
           },
-        });
+        }); 
+   
         toast.success("Uploaded completed", { id: "2" });
         const url = new URL(getSignedURLForTweet);
         const myFilePath = `${url.origin}${url.pathname}`;

@@ -117,7 +117,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                 Tweet
               </button>
               {user && (
-                <div className="flex fixed bottom-[1vh] w-full gap-5">
+                <div className="flex fixed bottom-[1vh] gap-1">
                   <div>
                     {user?.profileImageUrl && (
                       <Image
@@ -134,7 +134,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                     <div className="text-lg font-light text-[#536471]">@{user.firstName}</div>
                   </div>
                 
-                  <div><ModeToggle/></div>
+                  <div className="mr-3"><ModeToggle/></div>
                 </div>
               )}
             </div>
