@@ -3,7 +3,6 @@ import React, { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { BiHash, BiHomeCircle, BiLogOut, BiUser } from "react-icons/bi";
 import { BsBell, BsBookmark, BsEnvelope, BsTwitter } from "react-icons/bs";
-import { SlOptions } from "react-icons/sl";
 import Image from "next/image";
 import { useCurrentUser } from "@/hooks/user";
 import { graphqlClient } from "@/clients/api";
@@ -26,6 +25,7 @@ interface TwitterSidebarButon {
 
 const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
   const { user } = useCurrentUser();
+  console.log("these is server side rendering layout")
 
   const SideBarMenuItems: TwitterSidebarButon[] = useMemo(() => {
     return [
