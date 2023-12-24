@@ -3,8 +3,8 @@ import { graphql } from "@/gql";
 export const followUserMuatation = graphql(`
   #graphql
   mutation FollowUser($to: ID!) {
-  followUser(to: $to)
-}
+    followUser(to: $to)
+  }
 `);
 
 export const UnfollowUserMuatation = graphql(`
@@ -13,4 +13,3 @@ export const UnfollowUserMuatation = graphql(`
     unfollowUser(to: $to)
   }
 `);
-

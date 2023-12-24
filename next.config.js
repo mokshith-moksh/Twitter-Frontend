@@ -4,7 +4,7 @@ const nextConfig = {
         domains:[
                "avatars.githubusercontent.com",
                "lh3.googleusercontent.com",
-               "moksh-twitter-dev.s3.ap-south-1.amazonaws.com", 
+               "twitter-clon-dev.s3.ap-south-1.amazonaws.com", 
         ]
     }
 }

@@ -1,4 +1,5 @@
-import { graphql } from "../../gql";
+import { graphql, FragmentType, useFragment } from "../../gql";
+import { CORE_USER_FIELDS } from "./userFragments";
 
 export const verifyGoogleTokenQuery = graphql(`
   #graphql
@@ -9,82 +10,20 @@ export const verifyGoogleTokenQuery = graphql(`
 
 export const getCurrentUserQuery = graphql(`
   #graphql
+  ${CORE_USER_FIELDS}
   query GetCurrentUser {
     getCurrentUser {
-      id
-      profileImageUrl
-      email
-      firstName
-      lastName
-      recommendedUsers {
-        id
-        firstName
-        lastName
-        profileImageUrl
-      }
-      followers {
-        id
-        firstName
-        lastName
-        profileImageUrl
-      }
-      following {
-        id
-        firstName
-        lastName
-        profileImageUrl
-      }
-      likedTweets{
-        id
-      }
-      tweets {
-        content
-        id
-        imageUrl
-        auther {
-          id
-          firstName
-          lastName
-          profileImageUrl
-        }
-      }
+      ...UserFields
     }
   }
 `);
 
 export const getUserByIdQuery = graphql(`
   #graphql
+  ${CORE_USER_FIELDS}
   query GetUserById($id: ID!) {
     getUserById(id: $id) {
-      id
-      email
-      firstName
-      lastName
-      profileImageUrl
-
-      followers {
-        id
-        firstName
-        lastName
-        profileImageUrl
-      }
-      following {
-        id
-        firstName
-        lastName
-        profileImageUrl
-      }
-      tweets {
-        content
-        id
-        imageUrl
-        auther {
-          id
-          firstName
-          lastName
-          profileImageUrl
-        }
-      }
+      ...UserFields
     }
   }
 `);
@@ -92,22 +31,22 @@ export const getUserByIdQuery = graphql(`
 export const getAllUserQuery = graphql(`
   #graphql
   query GetAllUser {
-  getAllUser {
-    firstName
-    id
-    profileImageUrl
+    getAllUser {
+      firstName
+      id
+      profileImageUrl
+    }
   }
-}
 `);
 
 export const getSearchUserQuery = graphql(`
   #graphql
   query GetSearchUser($searchQuery: String!) {
-  getSearchUser(searchQuery: $searchQuery) {
-    id
-    firstName
-    lastName
-    profileImageUrl
+    getSearchUser(searchQuery: $searchQuery) {
+      id
+      firstName
+      lastName
+      profileImageUrl
+    }
   }
-}
 `);

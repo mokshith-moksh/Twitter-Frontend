@@ -1,13 +1,11 @@
 import { BsArrowLeftShort } from "react-icons/bs";
 import Image from "next/image";
 import { graphqlClient } from "@/clients/api";
-import { getUserByIdQuery } from "@/graphql/query/user";
+import { getUserByIdQuery } from "../../graphql/query/user";
 import FeedCard from "@/components/FeedCard";
 import { Tweet } from "@/gql/graphql";
 import NotFound from "../not-found";
 import { Follow } from "@/components/Follow";
-
-
 
 export default async function Page({ params }: { params: { id: string } }) {
   const userInfo = await graphqlClient.request(getUserByIdQuery, {
@@ -49,12 +47,12 @@ export default async function Page({ params }: { params: { id: string } }) {
             <span>{userInfo.getUserById.following?.length} Following</span>
           </div>
 
-          <Follow info={params.id}/>
+          <Follow info={params.id} />
         </div>
       </div>
       <div>
-        {userInfo.getUserById?.tweets?.map((tweet) => (
-          <FeedCard key={tweet?.id} dataTweet={tweet as Tweet} ></FeedCard>
+        {userInfo.getUserById?.tweets?.map((tweet: any) => (
+          <FeedCard key={tweet?.id} dataTweet={tweet as Tweet}></FeedCard>
         ))}
       </div>
     </div>

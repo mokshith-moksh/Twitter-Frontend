@@ -67,7 +67,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
   const handleLogingWithGoogle = useCallback(
     async (cred: CredentialResponse) => {
       const googleToken = cred.credential;
-
+      console.log(googleToken);
       if (!googleToken) return toast.error("Google token not found");
 
       const { verifyGoogleToken } = await graphqlClient.request(
@@ -76,8 +76,8 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
           token: googleToken,
         }
       );
-
-      toast.success("Google");
+      console.log(verifyGoogleToken);
+      toast.success("Logged-in");
       if (verifyGoogleToken)
         window.localStorage.setItem("__Twitter_token", verifyGoogleToken);
 
@@ -89,7 +89,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
 
   return (
     <div>
-      <div className="grid grid-cols-12 h-fit w-fit sm:px-[9vw]  ">
+      <div className="grid grid-cols-12 h-fit w-fit sm:px-[9vw] dark:bg-black ">
         {/* Icons Menu */}
         <div className="col-span-2 sm:col-span-3 pt-1 flex sm:justify-end pr-4 ">
           <div className="mt-6 text-2xl font-bold pr-6 ">
@@ -183,7 +183,7 @@ const TwitterLayout: React.FC<TwitterlayoutProps> = (props) => {
                       href={`/${el?.id}`}
                      
                     >
-                      <Button  className="rounded-2xl">
+                      <Button  className="rounded-2xl left-2">
                          View
                       </Button>
                      
